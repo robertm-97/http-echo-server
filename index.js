@@ -7,6 +7,8 @@ var server = require('net').createServer()
 var cid = 0
 
 module.exports = server // for testing
+var responseCode = process.env.RESPONSE_CODE || 200
+
 
 onEmit(server, { ignore: ['connection', 'listening', 'error'] }, function (eventName) {
   console.log('[server] event:', eventName)
@@ -34,7 +36,7 @@ server.on('connection', function (c) {
     console.log('--> ' + chunk.toString().split('\n').join('\n--> '))
     if (!gotData) {
       gotData = true
-      c.write('HTTP/1.1 200 OK\r\n')
+      c.write(`HTTP/1.1 ${responseCode} \r\n`)
       c.write('Date: ' + (new Date()).toString() + '\r\n')
       c.write('Connection: close\r\n')
       c.write('Content-Type: text/plain\r\n')
